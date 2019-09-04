@@ -1,0 +1,71 @@
+Sub update_data()
+'Choose file source to copy data necessary
+'Create a portal to get file(s) to copy
+
+Application.ScreenUpdating = False
+
+Dim initial As Variant
+initial = ThisWorkbook.Worksheets("Sheet1").Cells(1, ThisWorkbook.Worksheets("Sheet1").UsedRange.Columns.Count)
+MsgBox "Updated to Week " & initial
+
+Dim filestoOpen As Variant
+Dim iFileNum As Integer
+Dim strFileName As Variant
+Dim openbook As Workbook
+
+filestoOpen = Application.GetOpenFilename(Title:="Browse your file", FileFilter:="Excel Files(*.xls*), *.xls*", MultiSelect:=True)
+
+On Error GoTo Nofileselected
+startTime = Timer
+    For iFileNum = LBound(filestoOpen) To UBound(filestoOpen)
+        strFileName = filestoOpen(iFileNum)
+        Set openbook = Workbooks.Open(strFileName)
+    
+        Dim Last_col_origin As Integer
+        Dim Last_row_origin As Integer
+        Dim Last_row_fil As Integer
+        Last_col_origin = ThisWorkbook.Worksheets("Sheet1").UsedRange.Columns.Count
+        Last_row_origin = ThisWorkbook.Worksheets("Sheet1").UsedRange.Rows.Count
+        Last_row_fil = openbook.Worksheets("Sheet1").UsedRange.Rows.Count
+     
+        openbook.Worksheets("sheet1").Cells(1, 5).Copy _
+        destination:=ThisWorkbook.Worksheets("sheet1").Cells(1, Last_col_origin + 1)
+        openbook.Worksheets("sheet1").Range("A2", "A" & Last_row_fil).Copy _
+        destination:=ThisWorkbook.Worksheets("sheet1").Cells(Last_row_origin + 1, 1)
+        openbook.Worksheets("sheet1").Range("E2", "E" & Last_row_fil).Copy _
+        destination:=ThisWorkbook.Worksheets("sheet1").Cells(Last_row_origin + 1, Last_col_origin + 1)
+    
+        openbook.Close
+    Next
+          
+Dim Last_row_orig As Integer
+Dim Last_col_orig As Integer
+
+Last_row_orig = ThisWorkbook.Worksheets("Sheet1").UsedRange.Rows.Count
+Last_col_orig = ThisWorkbook.Worksheets("Sheet1").UsedRange.Columns.Count
+
+
+ThisWorkbook.Worksheets("Sheet1").Range("A" & Last_row_orig + 1).Consolidate Sources:= _
+ThisWorkbook.Worksheets("Sheet1").Range("A1", Cells(Last_row_orig, Last_col_orig)).Address(ReferenceStyle:=xlR1C1), Function:= _
+xlSum, Toprow:=True, LeftColumn:=True, CreateLinks:=False
+
+ThisWorkbook.Worksheets("Sheet1").Range("A1", Cells(Last_row_orig, Last_col_orig)).Delete
+
+ThisWorkbook.Worksheets("Sheet1").Sort.SortFields.Clear
+ThisWorkbook.Worksheets("Sheet1").Sort.SortFields.Add Key:=Range("B1:G1"), _
+     SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With ThisWorkbook.Worksheets("Sheet1").Sort
+        .SetRange Range("B1:G4")
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlLeftToRight
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+Exit Sub
+Nofileselected:
+    
+    MsgBox "No file selected"
+    
+Application.ScreenUpdating = True
+End Sub
