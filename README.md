@@ -23,7 +23,7 @@ Syntax highlighted code block
 
 **Bold** and _Italic_ and `Code` text
 
-[Example](Sub_update_data_consolidate.txt) and ![Image](src)
+[Example](https://github.com/giangnguyen36/VBAProjects/blob/master/Sub_update_data_consolidate.txt) and ![Image](http://genknews.genkcdn.vn/2017/92f5688014d2bdea0452ca760e20ddd9-bears-perform-dbz-fusion-dance-1488854713072.jpg)
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
