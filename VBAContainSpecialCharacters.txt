@@ -1,0 +1,40 @@
+Function ContainsSpecialCharacters(str As String)
+Dim spechar As String
+
+'output = ""
+For I = 1 To Len(str)
+ ch = Mid(str, I, 1)
+ Select Case ch
+  Case "0" To "9", "A" To "Z", "a" To "z", "-", "_"
+'   ContainsSpecialCharacters = False
+  Case Else
+    If spechar = "" Then
+        spechar = WorksheetFunction.Unicode(ch)
+    Else
+        spechar = WorksheetFunction.Concat(spechar, ";", WorksheetFunction.Unicode(ch))
+    End If
+   ContainsSpecialCharacters = spechar
+   
+'   Debug.Print ContainsSpecialCharacters
+'  Exit For
+ End Select
+Next
+End Function
+
+Function DeleteSpecialCharacters(str As String)
+Dim StrOutput As String
+
+StrOutput = ""
+For I = 1 To Len(str)
+ ch = Mid(str, I, 1)
+ Select Case ch
+  Case "0" To "9", "A" To "Z", "a" To "z", "-", "_"
+        StrOutput = StrOutput & ch
+
+ End Select
+DeleteSpecialCharacters = StrOutput
+Next
+
+End Function
+
+
